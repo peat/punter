@@ -1,0 +1,12 @@
+basic:
+  - basic
+
+# The 'ruby' fragment depends on the 'basic' fragment
+ruby:
+  - basic
+  - ruby
+
+# Demonstrates the 'credit' ERB fragment
+credit:
+  - basic
+  - credit

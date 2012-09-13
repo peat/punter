@@ -59,7 +59,6 @@ basic      234.56.78.9     i-45678901    September 5, 2012
 
 This will list out all of the servers running on your AWS account, with their assigned names, IPs, AWS instance identifiers, and when they were started.
 
-
 Maybe you want to terminate a server?
 
 ```bash
@@ -70,20 +69,43 @@ Terminating instance i-12345678.
 
 It's interactive, and gives you a bit of information so that you can avoid gnarly UH OH moments.
 
-## Fragments
+## Logging
 
-"Fragments" are the building blocks of the server scripts. They are are bash scripts that are concatenated together, then run as _root_ on the box, immediately after it boots. The `basic` fragment is the simplest of the bunch:
+You can check the status of a new instance by looking at the `/punter.log` file on the server. It's not particularly detailed, but it can help you figure out what the system is doing, and if it's completed setting up the environment. For example, the log for a `ruby` profile looks like this:
 
-```bash
-export DEBIAN_FRONTEND=noninteractive
-
-# ensure packages are up to date, install things we're always going to use.
-apt-get updates
-apt-get -y upgrade
-apt-get -y install build-essential git-core
+```
+STARTED PROFILE ruby
+Started fragment 'basic'
+Finished fragment 'basic'
+Started fragment 'ruby'
+Finished fragment 'ruby'
+COMPLETED PROFILE ruby. Have fun!
 ```
 
-Easy! Check out the other fragments in the `fragments` directory to see other examples.
+_Punter_ automatically adds the profile and fragment starting and finishing messages.
+
+## Fragments
+
+"Fragments" are the building blocks of the server scripts. They are are `bash` scripts that are concatenated together, then run as _root_ on the box, immediately after it boots. The `basic` fragment is the simplest of the bunch:
+
+```bash
+# update packages
+apt-get update
+apt-get -y upgrade
+
+# install packages we always want
+apt-get -y install git-core tmux
+```
+
+All fragments can be found in the `fragments` directory.
+
+Fragments also support ERB templating. Here's `fragments/credit.sh.erb`:
+
+```ruby
+<%= runtime_log("User #{`whoami`.chomp} started this server at #{Time.now}") %>
+```
+
+Please note that the ERB is evaluated _before_ you start the server.
 
 ## Profiles
 
@@ -95,11 +117,16 @@ ruby:
   - ruby
 ```
 
-This specifies that the `ruby` profile is dependent on the `basic` and `ruby` fragments.
+This specifies that the `ruby` profile is dependent on the `basic` and `ruby` fragments. _Punter_ will look for both `.sh` and `.sh.erb` fragments for a given name, so don't worry about the extension.
 
-That's about all there is to it. All of the code is in the `Rakefile` and if you're up on Ruby, it should be pretty simple to dissect.
+To inspect the the completely assembled and rendered profile before you start a server with it, you can inspect it. For example:
+
+```bash
+$ rake inspect PROFILE=credit
+```
+
+That displays the entire `credit` profile, including a rendered ERB fragment.
 
 ## Contributing
 
 You're welcome to contribute fragments and other updates; just send over a pull request, and tell me if you're cool with the (Apache License 2.0)[http://www.apache.org/licenses/LICENSE-2.0.html].
-

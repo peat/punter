@@ -1,0 +1,11 @@
+# AWS credentials; see your EC2 dashboard to get your default keypair name.
+
+access_key_id: YOUR_ACCESS_KEY_ID
+secret_access_key: YOUR_SECRET_ACCESS_KEY
+default_key_name: YOUR_AWS_KEYPAIR_NAME
+
+# Default server config -- this is small servers running 64-bit Ubuntu 12.04 LTS in the 'us-east' region.
+
+default_aws_region: us-east-1
+default_image_id: ami-097ace60
+default_size: m1.small
