@@ -123,4 +123,4 @@ _Punter_ automatically adds the profile and fragment starting and finishing mess
 
 ## Contributing
 
-You're welcome to contribute fragments and other updates; just send over a pull request, and tell me if you're cool with the (Apache License 2.0)[http://www.apache.org/licenses/LICENSE-2.0.html].
+You're welcome to contribute fragments and other updates; just send over a pull request, and tell me if you're cool with the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
