@@ -19,17 +19,11 @@ _Punter_ works by stitching together shell scripts found in the `fragments/` dir
 
 Punter is a set of Ruby rake tasks; as such, please install Ruby 1.9.2 (or newer) and the `bundler` gem, then run `bundle install` in the Punter root directory to install the other Ruby dependencies.
 
-Then, update the `config.yml` file with your AWS credentials ([located here](https://portal.aws.amazon.com/gp/aws/securityCredentials#access_credentials)), specifically `access_key_id` and `secret_access_key`.
-
-Second, install Ruby 1.9.2 (or better), and the `bundler` gem. You should have a To install the other dependencies:
-
-```bash
-$ bundle install
-```
+Then, update the `config.yml` file with your AWS credentials ([located here](https://portal.aws.amazon.com/gp/aws/securityCredentials#access_credentials)) and the name of your default EC2 key pair ([located here](https://console.aws.amazon.com/ec2/home#s=KeyPairs).
 
 ## Running
 
-To see the available configuration profiles:
+To see the available configuration _profiles_:
 
 ```bash
 $ rake profiles
@@ -38,7 +32,7 @@ ruby: basic, ruby
 lamp: basic, lamp
 ```
 
-This lists out the names of each configuration profiles, and the script fragments they use.
+This lists out the names of each profile, and the script _fragments_ they use. 
 
 In the first case, `basic` is the name of a profile that just runs the `basic` fragment. Second, the `ruby` profile stitches together the `basic` and `ruby` fragments. The `lamp` profile stitches together the `basic` and `lamp` fragments. Simple, 'eh?
 
@@ -52,41 +46,26 @@ What servers are currently running?
 
 ```bash
 $ rake servers
-NAME       IP              INSTANCE      STARTED
-basic      123.45.67.89    i-12345678    September 12, 2012
-basic      234.56.78.9     i-45678901    September 5, 2012
+PROFILE     IP               INSTANCE    STATUS         STARTED
+basic       123.45.67.8      i-98e4a9e2  running        2012-09-13 22:37:12 UTC
+basic                        i-26f5b85c  terminated     2012-09-13 22:45:04 UTC
 ```
 
-This will list out all of the servers running on your AWS account, with their assigned names, IPs, AWS instance identifiers, and when they were started.
+This will list out all of the servers running on your AWS account, with the profile they started with, IP, AWS instance identifier, and a startup timestamp.
 
 Maybe you want to terminate a server?
 
 ```bash
 $ rake terminate INSTANCE=i-12345678
-Are you sure you want to kill server "basic" running at "123.45.67.89"? [y/N] y
-Terminating instance i-12345678.
+Terminate the server running the 'ruby' profile at 23.45.67.89? [y/N]
+Terminating.
 ```
 
-It's interactive, and gives you a bit of information so that you can avoid gnarly UH OH moments.
-
-## Logging
-
-You can check the status of a new instance by looking at the `/punter.log` file on the server. It's not particularly detailed, but it can help you figure out what the system is doing, and if it's completed setting up the environment. For example, the log for a `ruby` profile looks like this:
-
-```
-STARTED PROFILE ruby
-Started fragment 'basic'
-Finished fragment 'basic'
-Started fragment 'ruby'
-Finished fragment 'ruby'
-COMPLETED PROFILE ruby. Have fun!
-```
-
-_Punter_ automatically adds the profile and fragment starting and finishing messages.
+It's interactive, and gives you a bit of information so that you can avoid a gnarly _OH SHIT_ moment.
 
 ## Fragments
 
-"Fragments" are the building blocks of the server scripts. They are are `bash` scripts that are concatenated together, then run as _root_ on the box, immediately after it boots. The `basic` fragment is the simplest of the bunch:
+Fragments are the building blocks of a profile: `bash` scripts that are concatenated together, then run as _root_ on the box, immediately after it boots. The `basic` fragment is the simplest of the bunch:
 
 ```bash
 # update packages
@@ -126,6 +105,21 @@ $ rake inspect PROFILE=credit
 ```
 
 That displays the entire `credit` profile, including a rendered ERB fragment.
+
+## Logging
+
+You can check the status of a new instance by looking at the `/punter.log` file on the server. It's not particularly detailed, but it can help you figure out what the system is doing, and if it's completed setting up the environment. For example, the log for a `ruby` profile looks like this:
+
+```
+STARTED PROFILE ruby
+Started fragment 'basic'
+Finished fragment 'basic'
+Started fragment 'ruby'
+Finished fragment 'ruby'
+COMPLETED PROFILE ruby. Have fun!
+```
+
+_Punter_ automatically adds the profile and fragment starting and finishing messages.
 
 ## Contributing
 
