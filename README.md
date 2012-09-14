@@ -25,11 +25,22 @@ Then, update the `config.yml` file with your [AWS credentials](https://portal.aw
 
 To see the available configuration _profiles_:
 
-```bash
+```
 $ rake profiles
-basic: basic
-ruby: basic, ruby
-lamp: basic, lamp
+basic:
+       Fragments: basic
+  Security Group: default
+   Key Pair Name: YOUR_AWS_KEYPAIR_NAME
+
+ruby:
+       Fragments: basic, ruby
+  Security Group: default
+   Key Pair Name: YOUR_AWS_KEYPAIR_NAME
+
+credit:
+       Fragments: basic, credit
+  Security Group: default
+   Key Pair Name: YOUR_AWS_KEYPAIR_NAME
 ```
 
 This lists out the names of each profile, and the script _fragments_ they use. 

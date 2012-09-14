@@ -19,9 +19,9 @@ desc 'Lists all available profiles and their dependencies.'
 task :profiles => :setup do
   @profiles.each do |p, fs|
     puts "#{p}:"
-    puts "       Fragments: #{fs['fragments'].join(', ')}"
-    puts "  Security Group: #{profile_or_config(p, 'security_group')}"
-    puts "   Key Pair Name: #{profile_or_config(p, 'key_name')}"
+    puts "       Fragments: #{(fs['fragments'] || []).join(', ')}"
+    puts " Security Groups: #{(env_profile_or_config('security_groups', p) || []).join(', ')}"
+    puts "   Key Pair Name: #{env_profile_or_config('key_name', p)}"
     puts
   end
 end
@@ -36,10 +36,11 @@ task :start => :setup do
 
   # build up the configuration options
   opts = {}
-  opts[:image_id]       = env_or_config( 'image_id' )
-  opts[:instance_type]  = env_or_config( 'size' )
-  opts[:key_name]       = env_or_config( 'key_name' )
-  opts[:user_data]      = user_data
+  opts[:image_id]        = env_profile_or_config( 'image_id', profile )
+  opts[:instance_type]   = env_profile_or_config( 'size', profile )
+  opts[:key_name]        = env_profile_or_config( 'key_name', profile )
+  opts[:security_groups] = env_profile_or_config( 'security_groups', profile )
+  opts[:user_data]       = user_data
 
   instance = @ec2.instances.create( opts )
   instance.add_tag( 'Profile', :value => profile )
@@ -48,6 +49,7 @@ task :start => :setup do
   puts "         profile: #{profile}"
   puts "        image_id: #{opts[:image_id]}"
   puts "   instance_type: #{opts[:instance_type]}"
+  puts " security_groups: #{opts[:security_groups].join(', ')}"
   puts "        key_name: #{opts[:key_name]}"
 end
 
@@ -106,30 +108,12 @@ end
 
 # ETC ---------------------------------------------------------------------
 
-# preferentially pulls from ENV, then @config
-def env_or_config( key )
-  env_key = key.upcase                 # foo -> FOO
-  cfg_key = "default_#{key.downcase}"  # foo -> default_foo
-
-  get_env( env_key ) || @config[cfg_key]
+def get_profile( profile, key )
+  @profiles[profile][key] if (profile && @profiles[profile])
 end
 
-# preferentially pulls from a @profiles, then @config
-# exits on failure to find a value
-def profile_or_config( profile, key )
-  
-  p = @profiles[profile]
-  if p[key]
-    return p[key]
-  end
-
-  cfg_key = "default_#{key.downcase}"
-  if @config[cfg_key]
-    return @config[cfg_key]
-  end
-
-  puts "Couldn't find #{key} in profile #{profile}; also couldn't find a value for #{cfg_key} in config.yml"
-  exit 1
+def env_profile_or_config( key, profile = false )
+  get_env( key.to_s ) || get_profile( profile, key.to_s ) || @config[key.to_s]
 end
 
 # assembles all of the fragments for a given profile, returning the result as a string.
@@ -220,6 +204,6 @@ end
 
 # returns an environment variable or nil.
 def get_env( n )
-  ENV[n]
+  ENV[n.upcase]
 end
 
