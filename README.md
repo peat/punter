@@ -103,11 +103,16 @@ A _profile_ is simply a list of fragments to put together, and is specified in t
 
 ```yaml
 ruby:
-  - basic
-  - ruby
+  fragments:
+    - basic
+    - ruby
+  security-groups:
+    - ssh
 ```
 
-This specifies that the `ruby` profile is dependent on the `basic` and `ruby` fragments. _Punter_ will look for both `.sh` and `.sh.erb` fragments for a given name, so don't worry about the extension.
+This specifies that the `ruby` profile is dependent on the `basic` and `ruby` fragments, and that it will belong to the `ssh` security group (assuming you have it configured on EC2). 
+
+_Punter_ will look for both `.sh` and `.sh.erb` fragments for a given name, so don't worry about the extension.
 
 To inspect the the completely assembled and rendered profile before you start a server with it, you can inspect it. For example:
 
