@@ -2,7 +2,7 @@
 
 This is a simple tool for configuring, starting, and stopping servers in Amazon's EC2 cloud. It's specifically geared towards "one off" deployment and light weight prototyping.
 
-If you're looking for sophisticated deployment and dependency management, I suggest you look at [Chef](http://www.opscode.com/chef/) or [Puppet](http://puppetlabs.com/)  -- they're quite nice at managing bigger deployments and complex configurations.
+If you're looking for sophisticated deployment and dependency management, I suggest you look at [Chef](http://www.opscode.com/chef/) or [Puppet](http://puppetlabs.com/)  -- they're quite nice for bigger deployments and complex configurations.
 
 _Punter_ has four basic tasks:
 
@@ -17,9 +17,9 @@ _Punter_ works by stitching together shell scripts found in the `fragments/` dir
 
 ## Installation
 
-_Punter_ is a set of Ruby rake tasks; as such, please install Ruby 1.9.2 (or newer) and the `bundler` gem, then run `bundle install` in the _Punter_ root directory to install the other Ruby dependencies.
+_Punter_ is a set of Ruby rake tasks; as such, please install Ruby 1.9.2 and the `bundler` gem. Run `bundle install` in the _Punter_ root directory to install the other Ruby dependencies.
 
-Then, update the `config.yml` file with your AWS credentials ([located here](https://portal.aws.amazon.com/gp/aws/securityCredentials#access_credentials)) and the name of your default EC2 key pair ([located here](https://console.aws.amazon.com/ec2/home#s=KeyPairs)).
+Then, update the `config.yml` file with your [AWS credentials](https://portal.aws.amazon.com/gp/aws/securityCredentials#access_credentials) and the name of your default [EC2 key pair](https://console.aws.amazon.com/ec2/home#s=KeyPairs).
 
 ## Running
 
