@@ -18,7 +18,11 @@ end
 desc 'Lists all available profiles and their dependencies.'
 task :profiles => :setup do
   @profiles.each do |p, fs|
-    puts "#{p}: #{fs.join(', ')}"
+    puts "#{p}:"
+    puts "       Fragments: #{fs['fragments'].join(', ')}"
+    puts "  Security Group: #{profile_or_config(p, 'security_group')}"
+    puts "   Key Pair Name: #{profile_or_config(p, 'key_name')}"
+    puts
   end
 end
 
@@ -110,17 +114,36 @@ def env_or_config( key )
   get_env( env_key ) || @config[cfg_key]
 end
 
+# preferentially pulls from a @profiles, then @config
+# exits on failure to find a value
+def profile_or_config( profile, key )
+  
+  p = @profiles[profile]
+  if p[key]
+    return p[key]
+  end
+
+  cfg_key = "default_#{key.downcase}"
+  if @config[cfg_key]
+    return @config[cfg_key]
+  end
+
+  puts "Couldn't find #{key} in profile #{profile}; also couldn't find a value for #{cfg_key} in config.yml"
+  exit 1
+end
+
 # assembles all of the fragments for a given profile, returning the result as a string.
 # exits on failure to build the profile.
 def build_profile( name )
-  fragments = @profiles[name]
-
-  if fragments.nil?
+  profile = @profiles[name]
+  if profile.nil?
     puts "Could not load profile named '#{name}'; check your profiles.yml."
     exit 1
   end
 
-  if fragments.empty?
+  fragments = profile['fragments']
+
+  if fragments.nil? or fragments.empty?
     puts "No fragments found for profile named '#{name}'; check your profiles.yml."
     exit 1
   end

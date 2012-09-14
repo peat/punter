@@ -9,3 +9,4 @@ default_key_name: YOUR_AWS_KEYPAIR_NAME
 default_aws_region: us-east-1
 default_image_id: ami-097ace60
 default_size: m1.small
+default_security_group: default
