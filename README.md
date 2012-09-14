@@ -11,7 +11,7 @@ _Punter_ has four basic tasks:
 - Listing running servers
 - Listing server configurations
 
-Out of the box, it's biased towards starting Ubuntu 12.04 LTS images on "small" EC2 instances with EBS storage. If you're not sure what that means, check out the [AWS Instance Types](http://aws.amazon.com/ec2/#instance).
+Out of the box, it's configured to start Ubuntu 12.04 LTS images on "small" EC2 instances with EBS storage. If you're not sure what that means, check out the [AWS Instance Types](http://aws.amazon.com/ec2/#instance).
 
 _Punter_ works by stitching together shell scripts found in the `fragments/` directory, and running them on the server after it boots. Pretty simple!
 
