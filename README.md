@@ -1,8 +1,8 @@
 # Punter
 
-This is a simple tool for starting and stopping pre-configured servers in Amazon's EC2 cloud. It's specifically geared towards "one off" deployment and light weight prototyping.
+This is a simple tool for configuring, starting, and stopping servers in Amazon's EC2 cloud. It's specifically geared towards "one off" deployment and light weight prototyping.
 
-If you're looking for sophisticated deployment and dependency management, I suggest you look at OpsCode Chef -- it's open source and quite nice at managing bigger deployments.
+If you're looking for sophisticated deployment and dependency management, I suggest you look at [Chef](http://www.opscode.com/chef/) or [Puppet](http://puppetlabs.com/)  -- they're quite nice at managing bigger deployments and complex configurations.
 
 _Punter_ has four basic tasks:
 
